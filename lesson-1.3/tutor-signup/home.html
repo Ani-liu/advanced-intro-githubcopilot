@@ -2,9 +2,145 @@
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>title</title>
+    <title>Karel's Shopping List</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+            background: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            margin-top: 30px;
+            background: #fff;
+            border: 3px solid #000;
+            border-radius: 10px;
+            padding: 32px 40px 40px 40px;
+            box-shadow: 2px 2px 8px #eee;
+            min-width: 350px;
+            max-width: 400px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .list-box {
+            border: 3px solid #000;
+            border-radius: 10px;
+            padding: 20px 20px 10px 20px;
+            margin-bottom: 30px;
+            background: #fafafa;
+        }
+        .item-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .item-row input[type="text"] {
+            width: 120px;
+            margin-right: 10px;
+            font-size: 1em;
+        }
+        .item-row input[type="number"] {
+            width: 80px;
+            font-size: 1em;
+        }
+        .add-btn {
+            margin-left: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            background: #e0e0e0;
+            border: 1px solid #888;
+            border-radius: 5px;
+            padding: 2px 8px;
+        }
+        .calc-btn {
+            display: block;
+            width: 100%;
+            margin: 30px 0 20px 0;
+            padding: 12px 0;
+            font-size: 1.3em;
+            font-family: inherit;
+            background: #fff;
+            border: 3px solid #000;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .calc-btn:hover {
+            background: #f0f0f0;
+        }
+        .sum-box {
+            margin-top: 10px;
+            border: 3px solid #000;
+            border-radius: 10px;
+            padding: 15px;
+            background: #fafafa;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    
+    <div class="container">
+        <h1>Karel's Shopping List</h1>
+        <div class="list-box" id="list-box">
+            <form id="shopping-form" autocomplete="off">
+                <div id="items-container">
+                    <div class="item-row">
+                        <input type="text" name="item" placeholder="Item 1" required />
+                        <span>:</span>
+                        <input type="number" name="price" placeholder="Price" min="0" step="0.01" required />
+                    </div>
+                    <div class="item-row">
+                        <input type="text" name="item" placeholder="Item 2" required />
+                        <span>:</span>
+                        <input type="number" name="price" placeholder="Price" min="0" step="0.01" required />
+                    </div>
+                </div>
+                <button type="button" class="add-btn" onclick="addItem()">+</button>
+            </form>
+        </div>
+        <button class="calc-btn" onclick="calculateSum()">Calculate</button>
+        <div class="sum-box" id="sum-box" style="display:none;"></div>
+    </div>
+    <script>
+        function addItem() {
+            const container = document.getElementById('items-container');
+            const count = container.children.length + 1;
+            const div = document.createElement('div');
+            div.className = 'item-row';
+            div.innerHTML = `<input type="text" name="item" placeholder="Item ${count}" required /> <span>:</span> <input type="number" name="price" placeholder="Price" min="0" step="0.01" required /> <button type='button' class='add-btn' onclick='removeItem(this)' title='Remove'>-</button>`;
+            container.appendChild(div);
+        }
+        function removeItem(btn) {
+            btn.parentElement.remove();
+        }
+        function calculateSum() {
+            const prices = Array.from(document.querySelectorAll('#items-container input[name="price"]'));
+            let sum = 0;
+            let valid = true;
+            prices.forEach(input => {
+                const val = parseFloat(input.value);
+                if (!isNaN(val)) sum += val;
+                else valid = false;
+            });
+            const sumBox = document.getElementById('sum-box');
+            if (!valid) {
+                sumBox.style.display = 'block';
+                sumBox.textContent = 'Please enter all prices.';
+                return;
+            }
+            sumBox.style.display = 'block';
+            sumBox.textContent = `Sum of item costs: $${sum.toFixed(2)}`;
+        }
+    </script>
 </body>
 </html>
